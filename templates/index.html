@@ -1,0 +1,13 @@
+<h3>customer connection data<h3>
+  <form action="/create" method="POST">
+    <label>name: <input type="text" name="customer"></label><br>
+    <label>ssh route: <input type="text" name="ssh_ip"></label><br>
+    <label>account: <input type="text" name="ssh_account"></label><br>
+    <label>password: <input type="password" name="ssh_password"></label><br>
+    <input type="submit" value="add">
+  </form>
+  <hr>
+  <form action="/search" method="get">
+    <label>find by customer <input type="text" name="name"></label>
+    <input type="submit" value="search">
+  </form>
