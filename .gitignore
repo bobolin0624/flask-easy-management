@@ -1,0 +1,53 @@
+# Python 類型
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pkl
+
+# 環境與套件
+env/
+venv/
+ENV/
+.venv/
+*.egg
+*.egg-info/
+dist/
+build/
+*.wheel
+*.whl
+
+# PyInstaller
+*.manifest
+*.spec
+
+# 編譯輸出
+*.log
+*.pot
+*.mo
+
+# Flask 檔案
+instance/
+instance/*
+!instance/config.py  # 保留 config.py，其他忽略
+
+# 設定檔
+*.env
+*.ini
+*.cfg
+
+# IDE 設定檔
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# 資料庫
+*.db
+*.sqlite3
+
+# Jupyter Notebook Checkpoints
+.ipynb_checkpoints
+
+# macOS 系統檔案
+.DS_Store
