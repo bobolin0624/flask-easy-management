@@ -1,13 +1,51 @@
 <h3>customer connection data<h3>
-  <form action="/create" method="POST">
-    <label>name: <input type="text" name="customer"></label><br>
-    <label>ssh route: <input type="text" name="ssh_ip"></label><br>
-    <label>account: <input type="text" name="ssh_account"></label><br>
-    <label>password: <input type="text" name="ssh_password"></label><br>
-    <input type="submit" value="add">
-  </form>
-  <hr>
-  <form action="/search" method="get">
-    <label>find by customer <input type="text" name="name"></label>
-    <input type="submit" value="search">
-  </form>
+    <form action="/create" method="POST">
+      <label>Name<input type="text" name="customer"></label><br>
+      <label>SSH<input type="text" name="ssh_ip"></label><br>
+      <label>Account<input type="text" name="ssh_account"></label><br>
+      <label>Password<input type="text" name="ssh_password"></label><br>
+      <label>MONGO HOST<input type="text" name="mongo_host"></label><br>
+      <label>MONGO PASSWORD<input type="text" name="mongo_pwd"></label><br>
+      <label>REDIS HOST<input type="text" name="redis_host"></label><br>
+      <label>REDIS PASSWORD<input type="text" name="redis_pwd"></label><br>
+      <label>MINIO HOST<input type="text" name="minio_host"></label><br>
+      <label>MINIO PASSWORD<input type="text" name="minio_pwd"></label><br>
+      <input type="submit" value="add">
+    </form>
+    <hr>
+    <form action="/search" method="get" id="searchForm">
+      <label>find by customer <input type="text" name="name"></label>
+      <button type="submit">Search</button>
+    </form>
+    <div id="results"></div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      $(document).ready(function () {
+        $('#searchForm').submit(function (e) {
+          e.preventDefault();
+
+          $.ajax({
+            url: '/search',
+            method: 'GET',
+            data: $(this).serialize(),
+            dataType: 'json',
+            success: function (response) {
+              console.log(response)
+              var resultsHtml = '<table class="table table-striped"><thead><tr><th>ID</th><th>Customer Name</th></tr></thead><tbody>';
+
+              response.customer_lists.forEach(function (item) {
+                resultsHtml += `<tr><td>${item.id}</td><td>${item.customer_name}</td></tr>`;
+              });
+
+              resultsHtml += '</tbody></table>';
+              $('#results').html(resultsHtml);
+            },
+            error: function (xhr, status, error) {
+              var errorMessage = (error.responseText || error.message) || 'An error occurred';
+              $('#results').html(`<p class="alert alert-danger">${errorMessage}</p>`);
+            }
+          });
+        });
+      });
+    </script>

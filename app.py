@@ -3,14 +3,7 @@ import json
 from flask import Flask, render_template, request, jsonify
 app = Flask(__name__)
 
-@app.route('/')
-def hello_world():
-    return '<p>Hello, World!</p>'
-@app.route('/customer')
-def customerList():
-    return 'customer_list'
-
-@app.route('/home', methods=['GET'])
+@app.route('/', methods=['GET'])
 def home():
     return render_template('index.html')
 
@@ -20,12 +13,24 @@ def create_customer():
     ssh_ip = request.form['ssh_ip']
     ssh_account = request.form['ssh_account']
     ssh_password = request.form['ssh_password']
+    mongo_host = request.form['mongo_host']
+    mongo_password = request.form['mongo_pwd']
+    redis_host = request.form['redis_host']
+    redis_password = request.form['redis_pwd']
+    minio_host = request.form['minio_host']
+    minio_password = request.form['minio_pwd']
 
     create_data = {
         'customer_name': customer,
         'ssh_ip': ssh_ip,
         'ssh_account': ssh_account,
-        'ssh_password': ssh_password
+        'ssh_password': ssh_password,
+        'mongo_host': mongo_host,
+        'mongo_password': mongo_password,
+        'redis_host': redis_host,
+        'redis_password': redis_password,
+        'minio_host': minio_host,
+        'minio_password': minio_password
     }
 
     json_file_path = './data/customer_data.json'
@@ -35,43 +40,35 @@ def create_customer():
     }
 
     existing_data = read_json_file(json_file_path)
+
     if not existing_data:
-        print('no data')
         jsonFormat['customer_lists'].append(create_data)
-        # 'a' is append
-        # dump 寫入本機 JSON file
-        with open(json_file_path, 'a') as json_file:
-                json.dump(jsonFormat, json_file)
-                json_file.write('\n')
+        write_json_file(json_file_path, jsonFormat)   
     else:
-        print('have data')
-        print('--------')
-        print(existing_data)
-        print('--------')
         # 找出 customer name
-        customers = existing_data[0]['customer_lists']
+        customers = existing_data['customer_lists']
         for customer in customers:
             print(customer)
             if customer['customer_name'] == create_data['customer_name']:
                 return { 'msg': 'Warning: customer name already exists.' }, 200
-            else:
-                print('no dup name')
-                # append 新的一筆
-                customers.append(create_data)
-
-                # w 覆寫文件
-                with open(json_file_path, 'w') as json_file:
-                    json.dump(existing_data, json_file)
-                    json_file.write('\n')
-
+            
+        customers.append(create_data)
+        print(customers)
+        write_json_file(json_file_path, existing_data)
 
     return jsonify(create_data), 201
+
+@app.route('/search', methods=['GET'])
+def search_customer():
+    json_file_path = './data/customer_data.json'
+    existing_data = read_json_file(json_file_path)
+    return jsonify(existing_data), 200
 
 
 def read_json_file(file_path):
     try:
         with open(file_path, 'r') as json_file:
-            data = [json.loads(line) for line in json_file]
+            data = json.load(json_file)
         return data
     except FileNotFoundError:
         print("File not found. Please check the path.")
@@ -79,3 +76,13 @@ def read_json_file(file_path):
     except json.JSONDecodeError:
         print("Error decoding JSON. Please check the file format.")
         return []
+    
+def write_json_file(file_path, data):
+    try:
+        # dump 寫入本機 JSON file
+        with open(file_path, 'w') as json_file:
+                # indent 是縮排
+                json.dump(data, json_file, indent=2)
+                json_file.write('\n')
+    except Exception as error:
+        print('Error writing JSON:', error)
