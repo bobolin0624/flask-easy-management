@@ -60,8 +60,12 @@ def create_customer():
 
 @app.route('/search', methods=['GET'])
 def search_customer():
+    args = request.args
+    customer_name = args.get('customer_name')
+    print(customer_name)
     json_file_path = './data/customer_data.json'
     existing_data = read_json_file(json_file_path)
+    print(existing_data)
     return jsonify(existing_data), 200
 
 
@@ -81,7 +85,7 @@ def write_json_file(file_path, data):
     try:
         # dump 寫入本機 JSON file
         with open(file_path, 'w') as json_file:
-                # indent 是縮排
+                # indent 是換行縮排
                 json.dump(data, json_file, indent=2)
                 json_file.write('\n')
     except Exception as error:

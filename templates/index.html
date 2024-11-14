@@ -14,7 +14,7 @@
     </form>
     <hr>
     <form action="/search" method="get" id="searchForm">
-      <label>find by customer <input type="text" name="name"></label>
+      <label>find by customer <input type="text" name="customer_name"></label>
       <button type="submit">Search</button>
     </form>
     <div id="results"></div>
@@ -24,21 +24,43 @@
       $(document).ready(function () {
         $('#searchForm').submit(function (e) {
           e.preventDefault();
-
           $.ajax({
             url: '/search',
             method: 'GET',
             data: $(this).serialize(),
             dataType: 'json',
             success: function (response) {
-              console.log(response)
-              var resultsHtml = '<table class="table table-striped"><thead><tr><th>ID</th><th>Customer Name</th></tr></thead><tbody>';
-
+              let resultsHtml = ``
               response.customer_lists.forEach(function (item) {
-                resultsHtml += `<tr><td>${item.id}</td><td>${item.customer_name}</td></tr>`;
+                resultsHtml += `
+                  <div>${item.customer_name}</div>
+                  <div class='code-block'>
+                    <code id="code-ssh_ip">${item.ssh_ip}</code>
+                    <button onclick="copyToClipboard('code-ssh_ip')">Copy</button>
+                    </br>
+                    <code id="code-ssh_password">${item.ssh_password}</code>
+                    <button onclick="copyToClipboard('code-ssh_password')">Copy</button>
+                    </br>
+                    <code id="code-mongo_host">${item.mongo_host}</code>
+                    <button onclick="copyToClipboard('code-mongo_host')">Copy</button>
+                    </br>
+                    <code id="code-mongo_pwd">${item.mongo_pwd}</code>
+                    <button onclick="copyToClipboard('code-mongo_pwd')">Copy</button>
+                    </br>
+                    <code id="code-redis_host">${item.redis_host}</code>
+                    <button onclick="copyToClipboard('code-redis_host')">Copy</button>
+                    </br>
+                    <code id="code-redis_pwd">${item.redis_pwd}</code>
+                    <button onclick="copyToClipboard('code-redis_pwd')">Copy</button>
+                    </br>
+                    <code id="code-minio_host">${item.minio_host}</code>
+                    <button onclick="copyToClipboard('code-minio_host')">Copy</button>
+                    </br>
+                    <code id="code-minio_pwd">${item.minio_pwd}</code>
+                    <button onclick="copyToClipboard('code-minio_pwd')">Copy</button>
+                  </div>`;
               });
 
-              resultsHtml += '</tbody></table>';
               $('#results').html(resultsHtml);
             },
             error: function (xhr, status, error) {
@@ -48,4 +70,23 @@
           });
         });
       });
+
+      function copyToClipboard(elementId) {
+        const textToCopy = document.getElementById(elementId).innerText;
+        navigator.clipboard.writeText(textToCopy).then(() => {
+          console.log('Copied to clipboard!');
+        }).catch(err => {
+          console.error("Failed to copy: ", err);
+        });
+      }
+
     </script>
+    <style>
+      .code-block {
+        background-color: #f4f4f4;
+        padding: 10px;
+        margin: 5px 0;
+        border-radius: 4px;
+        font-family: monospace;
+      }
+    </style>
