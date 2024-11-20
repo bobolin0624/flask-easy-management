@@ -1,7 +1,10 @@
 import os
 import json
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, url_for
+from flask_bootstrap import Bootstrap
+
 app = Flask(__name__)
+Bootstrap(app)
 
 @app.route('/', methods=['GET'])
 def home():
@@ -19,6 +22,7 @@ def create_customer():
     redis_password = request.form['redis_pwd']
     minio_host = request.form['minio_host']
     minio_password = request.form['minio_pwd']
+    notes = request.form['notes']
 
     create_data = {
         'customer_name': customer,
@@ -30,7 +34,8 @@ def create_customer():
         'redis_host': redis_host,
         'redis_password': redis_password,
         'minio_host': minio_host,
-        'minio_password': minio_password
+        'minio_password': minio_password,
+        'notes': notes
     }
 
     json_file_path = './data/customer_data.json'
@@ -43,31 +48,47 @@ def create_customer():
 
     if not existing_data:
         jsonFormat['customer_lists'].append(create_data)
-        write_json_file(json_file_path, jsonFormat)   
+        write_json_file(json_file_path, jsonFormat)
     else:
         # 找出 customer name
         customers = existing_data['customer_lists']
         for customer in customers:
-            print(customer)
             if customer['customer_name'] == create_data['customer_name']:
                 return { 'msg': 'Warning: customer name already exists.' }, 200
             
         customers.append(create_data)
-        print(customers)
         write_json_file(json_file_path, existing_data)
 
-    return jsonify(create_data), 201
+    # return render_template('index.html'), 200
+    return redirect(url_for('home'))
 
-@app.route('/search', methods=['GET'])
-def search_customer():
-    args = request.args
-    customer_name = args.get('customer_name')
-    print(customer_name)
+
+@app.route('/edit', methods=['PATCH'])
+def edit_customer():
+    # customer name, key, value
+    data = request.json
+    customer = data['customer']
+    key_to_update = data['keyname']
+    new_value = data['inputValue']
+
     json_file_path = './data/customer_data.json'
     existing_data = read_json_file(json_file_path)
-    print(existing_data)
-    return jsonify(existing_data), 200
+    customers = existing_data['customer_lists']
 
+    for customerInJson in customers:
+        if customerInJson['customer_name'] == customer:
+            # 修改內容
+            customerInJson[key_to_update] = new_value
+            
+    write_json_file(json_file_path, existing_data)
+    return render_template('index.html'), 200
+
+
+@app.route('/customer-list', methods=['GET'])
+def get_customer_list():
+    json_file_path = './data/customer_data.json'
+    existing_data = read_json_file(json_file_path)
+    return jsonify(existing_data), 200
 
 def read_json_file(file_path):
     try:
