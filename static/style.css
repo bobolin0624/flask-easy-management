@@ -1,0 +1,67 @@
+body {
+  background-color: #1e1e2f;
+  color: #f0f0f0;
+}
+
+.navbar {
+  background-color: #2a2a3c;
+}
+
+a.navbar-brand.title {
+  color: darkkhaki;
+  font-weight: bold;
+}
+
+.form-control,
+input[type="text"] {
+  background-color: #2f2f40;
+  color: #ffffff;
+  border: 1px solid #444;
+}
+
+.form-control::placeholder {
+  color: #aaa;
+}
+
+.btn-outline-success {
+  border-color: #00ffae;
+  color: #00ffae;
+}
+
+.btn-outline-success:hover {
+  background-color: #00ffae;
+  color: #000;
+}
+
+.btn-outline-primary {
+  border-color: #4dabf7;
+  color: #4dabf7;
+}
+
+.btn-outline-primary:hover {
+  background-color: #4dabf7;
+  color: #000;
+}
+
+.card {
+  background-color: #2f2f40;
+  border: none;
+}
+
+hr {
+  border-top: 1px solid #444;
+}
+
+.modal-content {
+  background-color: #1e1e2f;
+  color: #f0f0f0f0;
+}
+
+#editValue {
+  background-color: #f0f0f0f0;
+  color: #1e1e2f;
+}
+
+.close {
+  color: #f0f0f0f0;
+}

@@ -5,84 +5,95 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Customer Connection Data</title>
-  <!-- Link to Bootstrap CSS -->
+
+  <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="../static/style.css">
 </head>
 
 <body>
   <div class="container-fluid">
     {% block navbar %}
-    <nav class="navbar navbar-light bg-light justify-content-between">
-      <a class="navbar-brand">Customer Connection Data</a>
+    <nav class="navbar navbar-light justify-content-between">
+      <a class="navbar-brand title">Customer Connection Data</a>
     </nav>
     {% endblock %}
 
     {% block content %}
-    <!-- table -->
-    
-    <!-- Your form and search UI go here -->
-    <div class="dropdown">
-      <button class="btn btn-outline-primary dropdown-toggle" type="button" id="customerDropdown" data-toggle="dropdown"
-        aria-haspopup="true" aria-expanded="false">
-        Select a Customer
-      </button>
-      <div class="dropdown-menu" aria-labelledby="customerDropdown" id="customerList">
-        <!-- Customer list will be populated here -->
-      </div>
-    </div>
-    <div id="customerDetails" class="mt-3">
-      <!-- Customer data will appear here after selection -->
-    </div>
-    <hr>
-    <form action="/create" method="POST">
-      <div class="form-group m-1">
-        <label>Name<input type="text" name="customer" class="ml-3"></label>
-      </div>
-      <div class="form-group m-1">
-        <label>SSH<input type="text" name="ssh_ip" class="ml-3"></label>
-      </div>
-      <div class="form-group m-1">
-        <label>Account<input type="text" name="ssh_account" class="ml-3"></label>
-      </div>
-      <div class="form-group m-1">
-        <label>Password<input type="text" name="ssh_password" class="ml-3"></label>
-      </div>
-      <div class="form-group m-1">
-        <label>MONGO HOST<input type="text" name="mongo_host" class="ml-3"></label>
-      </div>
-      <div class="form-group m-1">
-        <label>MONGO PASSWORD<input type="text" name="mongo_pwd" class="ml-3"></label>
-      </div>
-      <div class="form-group m-1">
-        <label>REDIS HOST<input type="text" name="redis_host" class="ml-3"></label>
-      </div>
-      <div class="form-group m-1">
-        <label>REDIS PASSWORD<input type="text" name="redis_pwd" class="ml-3"></label>
-      </div>
-      <div class="form-group m-1">
-        <label>MINIO HOST<input type="text" name="minio_host" class="ml-3"></label>
-      </div>
-      <div class="form-group m-1">
-        <label>MINIO PASSWORD<input type="text" name="minio_pwd" class="ml-3"></label><br>
-      </div>
-      <div class="form-group m-1">
-        <label>Notes
-        <textarea name="notes" id="notes" rows="4" class="form-control mt-1" placeholder="..."></textarea></label>
-      </div>
-      <button type="submit" class="btn btn-outline-success">create</button>
-      <!-- <input type="submit" value="create"> -->
-    </form>
-    <hr>
+    <div class="row mt-4">
+      <!-- Left Column: Customer Details and Dropdown -->
+      <div class="col-md-6">
+        <div class="dropdown mb-3">
+          <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="customerDropdown" data-toggle="dropdown"
+            aria-haspopup="true" aria-expanded="false">
+            Select a Customer
+          </button>
+          <div class="dropdown-menu" aria-labelledby="customerDropdown" id="customerList">
+            <!-- Customer list populated dynamically -->
+          </div>
+        </div>
 
-  </div>
-  {% endblock %}
+        <div id="customerDetails">
+          <!-- Customer data appears here -->
+          <div class="card p-3">
+            <h6 class="text-info"></h6>
+            <!-- Placeholder or dynamic content -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Create Form -->
+      <div class="col-md-6">
+        <form action="/create" method="POST">
+          <h6 class="text-success mb-3">Add New Customer</h6>
+          <div class="form-group">
+            <label>Name *<input type="text" name="customer" class="form-control" placeholder="Customer name" required></label>
+          </div>
+          <div class="form-group">
+            <label>SSH<input type="text" name="ssh_ip" class="form-control" placeholder="SSH IP"></label>
+          </div>
+          <div class="form-group">
+            <label>Account<input type="text" name="ssh_account" class="form-control" placeholder="SSH Account"></label>
+          </div>
+          <div class="form-group">
+            <label>Password<input type="text" name="ssh_password" class="form-control" placeholder="SSH Password"></label>
+          </div>
+          <div class="form-group">
+            <label>MONGO HOST<input type="text" name="mongo_host" class="form-control"></label>
+          </div>
+          <div class="form-group">
+            <label>MONGO PASSWORD<input type="text" name="mongo_pwd" class="form-control"></label>
+          </div>
+          <div class="form-group">
+            <label>REDIS HOST<input type="text" name="redis_host" class="form-control"></label>
+          </div>
+          <div class="form-group">
+            <label>REDIS PASSWORD<input type="text" name="redis_pwd" class="form-control"></label>
+          </div>
+          <div class="form-group">
+            <label>MINIO HOST<input type="text" name="minio_host" class="form-control"></label>
+          </div>
+          <div class="form-group">
+            <label>MINIO PASSWORD<input type="text" name="minio_pwd" class="form-control"></label>
+          </div>
+          <div class="form-group">
+            <label>Notes
+              <textarea name="notes" class="form-control" rows="4" placeholder="Any additional info..."></textarea>
+            </label>
+          </div>
+          <button type="submit" class="btn btn-outline-success btn-block">Create</button>
+        </form>
+      </div>
+    </div>
+    {% endblock %}
   </div>
 
   <!-- Bootstrap JS and dependencies -->
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-
   <script src="{{ url_for('static', filename='js/api.js') }}"></script>
 </body>
 
